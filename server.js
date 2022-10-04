@@ -3,9 +3,9 @@ const express = require("express")
 const Joi = require("joi")
 const app = express()
 
-// Middlewares
-app.use(express.json())
-app.use(bodyParser.json())
+/* Middlewares */
+app.use(express.json()) // Enable the use of JSON Files
+app.use(bodyParser.json()) // Enables the body parser
 
 /* HOMEPAGE */
 app.get('/',(req,res) =>{
@@ -14,8 +14,7 @@ app.get('/',(req,res) =>{
 
 /* MEMORY BASED DATABASE */
 const userList = [
-    {id:0, userName:"Claro"},
-    {id:1, userName:"Miguel"}
+    {id:0, userName:"Claro"}
 ]
 
 /* INPUT VALIDATOR */
@@ -28,12 +27,12 @@ function validate(apiRequest) {
 }
 
 /* API GET REQUEST */
-app.get('/api/user',(req,res) => {
+app.get('/api/userList',(req,res) => {
     res.send(userList)
 })
 
 /* API POST REQUEST */
-app.post('/api/user',(req,res) =>{
+app.post('/api/addUser',(req,res) =>{
     // Validate the input
     const {error} = validate(req.body)
     // If the requirements did not meet return 400 Bad Request
@@ -51,17 +50,24 @@ app.post('/api/user',(req,res) =>{
     res.send(userList)
 })
 
-
-// DELETE REQUEST
-app.delete('api/userdelete/:id', (req,res) => {
-    const user = userList.find(c => c.id === parseInt(req.params.id))
-    if (!user) res.status(404).send("The user with the given ID was not found")
-    const index = userList.indexOf(user)
-    userList.splice(index, 1)
+/* API PUT REQUEST */
+app.put('/api/editUser/:id',(req,res) => {
+    // Find if the user is existing
+    const userExist = userList.find(user => user.id === parseInt(req.params.id))
+    // If the user does not exist return 400 Bad Request
+    if (!userExist){
+        res.status(400).send("User does not exist")
+    }
+    // else update user data
+    const {error} = validate(req.body)
+    if (error){
+        res.status(400).send(error.details[0].message)
+        return
+    }
+    userExist.userName = req.body.userName
+    // Show the updated list
     res.send(userList)
 })
-
-
 
 /* PORT CONFIG */
 const port = process.env.PORT || 1111

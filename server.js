@@ -9,8 +9,9 @@ app.use(express.json()) // Enable the use of JSON Files
 app.use(bodyParser.json()) // Enables the body parser
 
 /* DATABASE CONNECTION */
+// MySQL Database Information
 const db = mysql2.createConnection({
-    host:'localhost',
+    host:'localhost', // Change the value into public IP if necessary
     port:'9999',
     user:'root',
     password:'H0n0k4kousaka54!',

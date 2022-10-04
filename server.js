@@ -62,7 +62,7 @@ app.put('/api/editUser/:id',(req,res) => {
     const {error} = validate(req.body)
     if (error){
         res.status(400).send(error.details[0].message)
-        return
+        return 
     }
     userExist.userName = req.body.userName
     // Show the updated list

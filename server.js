@@ -3,9 +3,9 @@ const express = require("express")
 const Joi = require("joi")
 const app = express()
 
-// Middlewares
-app.use(express.json())
-app.use(bodyParser.json())
+/* Middlewares */
+app.use(express.json()) // Enable the use of JSON Files
+app.use(bodyParser.json()) // Enables the body parser
 
 /* HOMEPAGE */
 app.get('/',(req,res) =>{

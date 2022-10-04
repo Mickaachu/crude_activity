@@ -1,9 +1,11 @@
+const bodyParser = require("body-parser")
 const express = require("express")
 const Joi = require("joi")
 const app = express()
 
-// Enable the use of JSON files
+// Middlewares
 app.use(express.json())
+app.use(bodyParser.json())
 
 /* HOMEPAGE */
 app.get('/',(req,res) =>{
@@ -17,12 +19,11 @@ const userList = [
 
 /* INPUT VALIDATOR */
 function validate(apiRequest) {
-    const schema = {
+    const schema = Joi.object({
         // User name is required with minimum of 4 char
         userName : Joi.string().min(4).required()
-    }
-    const data = Buffer.from(apiRequest)
-    return Joi.valid(data,schema)
+    })
+    return schema.validate(apiRequest)
 }
 
 /* API GET REQUEST */
@@ -36,7 +37,7 @@ app.post('/api/addUser',(req,res) =>{
     const {error} = validate(req.body)
     // If the requirements did not meet return 400 Bad Request
     if (error){
-        res.status(400).send(error)
+        res.status(400).send(error.details[0].message)
         return
     }    
     // Add new user

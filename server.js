@@ -51,9 +51,9 @@ app.post('/api/addUser',(req,res) =>{
 })
 
 /* API PUT REQUEST */
-app.put('/api/editUser/',(req,res) => {
+app.put('/api/editUser/:id',(req,res) => {
     // Find if the user is existing
-    const userExist = userList.find(user => user.id === parseInt(req.body.id))
+    const userExist = userList.find(user => user.id === parseInt(req.params.id))
     // If the user does not exist return 400 Bad Request
     if (!userExist){
         res.status(400).send("User does not exist")
@@ -62,7 +62,7 @@ app.put('/api/editUser/',(req,res) => {
     const {error} = validate(req.body)
     if (error){
         res.status(400).send(error.details[0].message)
-        return
+        return 
     }
     userExist.userName = req.body.userName
     // Show the updated list

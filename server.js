@@ -50,7 +50,7 @@ app.post('/api/addUser',(req,res) =>{
     res.send(userList)
 })
 
-/* API PUT REQUEST v1 */
+/* API PUT REQUEST */
 app.put('/api/editUser/',(req,res) => {
     // Find if the user is existing
     const userExist = userList.find(user => user.id === parseInt(req.body.id))

@@ -69,6 +69,19 @@ app.put('/api/editUser/:id',(req,res) => {
     res.send(userList)
 })
 
+// API DELETE REQUEST
+app.delete('/api/deleteUser/:id',(req,res) => {
+    const userExist = userList.find(user => user.id === parseInt(req.params.id))
+   
+    if (!userExist) res.status(400).send("User does not exist");
+    
+    // else delete user data
+    const index = userList.indexOf(userExist)
+    userList.splice(index,1)
+    // Show the updated list
+    res.send(userList)
+})
+
 /* PORT CONFIG */
 const port = process.env.PORT || 1111
 app.listen(port, () => console.log(`Listening on port ${port}...`))

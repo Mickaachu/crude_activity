@@ -50,6 +50,25 @@ app.post('/api/addUser',(req,res) =>{
     res.send(userList)
 })
 
+/* API PUT REQUEST */
+app.put('/api/editUser/:id',(req,res) => {
+    // Find if the user is existing
+    const userExist = userList.find(user => user.id === parseInt(req.params.id))
+    // If the user does not exist return 400 Bad Request
+    if (!userExist){
+        res.status(400).send("User does not exist")
+    }
+    // else update user data
+    const {error} = validate(req.body)
+    if (error){
+        res.status(400).send(error.details[0].message)
+        return
+    }
+    userExist.userName = req.body.userName
+    // Show the updated list
+    res.send(userList)
+})
+
 /* PORT CONFIG */
 const port = process.env.PORT || 1111
 app.listen(port, () => console.log(`Listening on port ${port}...`))

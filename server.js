@@ -50,10 +50,10 @@ app.post('/api/addUser',(req,res) =>{
     res.send(userList)
 })
 
-/* API PUT REQUEST */
-app.put('/api/editUser/:id',(req,res) => {
+/* API PUT REQUEST v1 */
+app.put('/api/editUser/',(req,res) => {
     // Find if the user is existing
-    const userExist = userList.find(user => user.id === parseInt(req.params.id))
+    const userExist = userList.find(user => user.id === parseInt(req.body.id))
     // If the user does not exist return 400 Bad Request
     if (!userExist){
         res.status(400).send("User does not exist")

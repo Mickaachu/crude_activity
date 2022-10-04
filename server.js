@@ -3,9 +3,9 @@ const express = require("express")
 const Joi = require("joi")
 const app = express()
 
-// Middlewares
-app.use(express.json())
-app.use(bodyParser.json())
+/* Middlewares */
+app.use(express.json()) // Enable the use of JSON Files
+app.use(bodyParser.json()) // Enables the body parser
 
 /* HOMEPAGE */
 app.get('/',(req,res) =>{
@@ -47,6 +47,25 @@ app.post('/api/addUser',(req,res) =>{
     }
     userList.push(newUser)
     // Show list of users
+    res.send(userList)
+})
+
+/* API PUT REQUEST */
+app.put('/api/editUser/:id',(req,res) => {
+    // Find if the user is existing
+    const userExist = userList.find(user => user.id === parseInt(req.params.id))
+    // If the user does not exist return 400 Bad Request
+    if (!userExist){
+        res.status(400).send("User does not exist")
+    }
+    // else update user data
+    const {error} = validate(req.body)
+    if (error){
+        res.status(400).send(error.details[0].message)
+        return
+    }
+    userExist.userName = req.body.userName
+    // Show the updated list
     res.send(userList)
 })
 

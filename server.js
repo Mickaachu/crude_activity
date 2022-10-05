@@ -1,11 +1,23 @@
 const bodyParser = require("body-parser")
 const express = require("express")
+const mysql2 = require('mysql2')
 const Joi = require("joi")
 const app = express()
 
 /* Middlewares */
 app.use(express.json()) // Enable the use of JSON Files
 app.use(bodyParser.json()) // Enables the body parser
+
+/* DATABASE CONNECTION */
+// MySQL Database Information
+const db = mysql2.createConnection({
+    host:'localhost', // Change the value into public IP if necessary
+    port:'9999',
+    user:'root',
+    password:'H0n0k4kousaka54!',
+    database:'crud_activity'
+})
+db.connect() // This will connect the code to the database connection
 
 /* HOMEPAGE */
 app.get('/',(req,res) =>{
@@ -28,7 +40,12 @@ function validate(apiRequest) {
 
 /* API GET REQUEST */
 app.get('/api/userList',(req,res) => {
-    res.send(userList)
+    // db.query({query statement},function = results)
+    db.query('SELECT * FROM userlist',(err,results,fields) => {
+        if (err) throw err
+        console.log(`Found ${results.length} results`)
+        res.send(results)
+    })
 })
 
 /* API POST REQUEST */
@@ -41,32 +58,64 @@ app.post('/api/addUser',(req,res) =>{
         return
     }    
     // Add new user
-    const newUser = {
-        id: userList.length + 1,
-        userName: req.body.userName
-    }
-    userList.push(newUser)
+    db.query(`INSERT INTO userlist (userName) VALUES ("${req.body.userName}")`,(err) => {
+        if (err) throw err
+        console.log("[ INSERT SUCCESS ]")
+    })
     // Show list of users
-    res.send(userList)
+    db.query('SELECT * FROM userlist',(err,results) => {
+        if (err) throw err
+        res.send(results)
+    })
 })
 
 /* API PUT REQUEST */
 app.put('/api/editUser/:id',(req,res) => {
     // Find if the user is existing
-    const userExist = userList.find(user => user.id === parseInt(req.params.id))
-    // If the user does not exist return 400 Bad Request
-    if (!userExist){
-        res.status(400).send("User does not exist")
-    }
+    db.query(`SELECT * FROM userlist WHERE id=${req.params.id}`,(err,results) => {
+        if (err) throw err
+        if (results.length == 0){
+            // If the user does not exist return 400 Bad Request
+            res.status(400).send("User does not exist")
+            return
+        }
+    })
     // else update user data
     const {error} = validate(req.body)
     if (error){
         res.status(400).send(error.details[0].message)
         return 
     }
-    userExist.userName = req.body.userName
+    db.query(`UPDATE userlist SET userName="${req.body.userName}" WHERE id=${req.params.id}`,(err)=>{
+        if (err) throw err
+    })
     // Show the updated list
-    res.send(userList)
+    db.query('SELECT * FROM userlist',(err,results)=>{
+        if (err) throw err
+        res.send(results)
+    })
+})
+
+/* API DELETE REQUEST */
+app.delete('/api/deleteUser/:id',(req,res)=>{
+    // Find if the user is existing
+    db.query(`SELECT * FROM userlist WHERE id=${req.params.id}`,(err,results) => {
+        if (err) throw err
+        if (results.length == 0){
+            // If the user does not exist return 400 Bad Request
+            res.status(400).send("User does not exist")
+            return
+        }
+    })
+    // else delete user data
+    db.query(`DELETE FROM userlist WHERE id=${req.params.id}`,(err)=>{
+        if (err) throw err
+    })
+    // Show the updated list
+    db.query('SELECT * FROM userlist',(err,results)=>{
+        if (err) throw err
+        res.send(results)
+    })
 })
 
 // API DELETE REQUEST

@@ -39,7 +39,6 @@ app.get('/api/userList',(req,res) => {
     // db.query({query statement},function = results)
     db.query('SELECT * FROM userlist',(err,results,fields) => {
         if (err) throw err
-        console.log(`Found ${results.length} results`)
         res.send(results)
     })
 })
@@ -73,23 +72,22 @@ app.put('/api/editUser/:id',(req,res) => {
         // If the user does not exist return 400 Bad Request
         if (results.length === 0){
             res.status(400).send("User does not exist.")
+            return
         }
-        else{
-            // else update user data
-            const {error} = validate(req.body)
-            if (error){
-                res.status(400).send(error.details[0].message)
-                return 
-            }
-            db.query(`UPDATE userlist SET userName="${req.body.userName}" WHERE id=${req.params.id}`,(err)=>{
-                if (err) throw err
-            })
-            // Show the updated list
-            db.query('SELECT * FROM userlist',(err,results)=>{
-                if (err) throw err
-                res.send(results)
-            })
+        // else update user data
+        const {error} = validate(req.body)
+        if (error){
+            res.status(400).send(error.details[0].message)
+            return 
         }
+        db.query(`UPDATE userlist SET userName="${req.body.userName}" WHERE id=${req.params.id}`,(err)=>{
+            if (err) throw err
+        })
+        // Show the updated list
+        db.query('SELECT * FROM userlist',(err,results)=>{
+            if (err) throw err
+            res.send(results)
+        })
     })
 })
 
@@ -103,17 +101,15 @@ app.delete('/api/deleteUser/:id',(req,res)=>{
             res.status(400).send("User does not exist")
             return
         }
-        else{
-            // else delete user data
-            db.query(`DELETE FROM userlist WHERE id=${req.params.id}`,(err)=>{
-                if (err) throw err
-            })
-            // Show the updated list
-            db.query('SELECT * FROM userlist',(err,results)=>{
-                if (err) throw err
-                res.send(results)
-            })
-        }
+        // else delete user data
+        db.query(`DELETE FROM userlist WHERE id=${req.params.id}`,(err)=>{
+            if (err) throw err
+        })
+        // Show the updated list
+        db.query('SELECT * FROM userlist',(err,results)=>{
+            if (err) throw err
+            res.send(results)
+        })
     })
 })
 

@@ -79,6 +79,7 @@ app.delete('/api/deleteUser/:id',(req,res) => {
     const index = userList.indexOf(userExist)
     userList.splice(index,1)
     // Show the updated list
+    console.log("deleted")
     res.send(userList)
 })
 

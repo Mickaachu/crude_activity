@@ -1,6 +1,7 @@
 /* MODULES */
 const express = require("express")
 const bodyParser = require("body-parser")
+const cors = require("cors")
 const mysql2 = require('mysql2')
 const Joi = require("joi")
 const app = express()
@@ -8,6 +9,8 @@ const app = express()
 /* Middleware */
 app.use(express.json()) // Enable the use of JSON Files
 app.use(bodyParser.json()) // Enables the body parser
+app.use(cors())
+
 
 /* DATABASE CONNECTION */
 // MySQL Database Information
@@ -15,7 +18,7 @@ const db = mysql2.createConnection({
     host:'localhost', // Change the value into public IP if necessary
     port:'9999',
     user:'root',
-    password:'H0n0k4kousaka54!',
+    password: 'louise',
     database:'crud_activity'
 })
 db.connect() // This will connect the code to the database connection

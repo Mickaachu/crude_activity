@@ -7,9 +7,10 @@ const Joi = require("joi")
 const app = express()
 
 /* Middleware */
+app.use(cors()) //enable cors
 app.use(express.json()) // Enable the use of JSON Files
 app.use(bodyParser.json()) // Enables the body parser
-app.use(cors())
+
 
 
 /* DATABASE CONNECTION */

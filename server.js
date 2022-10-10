@@ -1,3 +1,7 @@
+// REMINDERS
+// - needs to change the name of table from userlist to usertable
+
+
 /* MODULES */
 const express = require("express")
 const bodyParser = require("body-parser")
@@ -18,7 +22,7 @@ app.use(bodyParser.json()) // Enables the body parser
 const db = mysql2.createConnection({
     host:'localhost', // Change the value into public IP if necessary
     user:'root',
-    password: 'Capuchino123',
+    password: 'Capuchino123', //Change the password to your own databse password
     database:'crud_client'
 })
 db.connect() // This will connect the code to the database connection

@@ -14,16 +14,7 @@ const Home = () => {
         <h2>Please see Users below</h2>
         <ul>
           {
-            // {users ? (
-            //   users.map((user) => (
-            //     <li>
-            //       {user.userName}
-            //     </li>
-            //   ))
-            // ) : (
-            //   <div>Loading...</div>
-            // )
-
+            
             users ? (
               users.map((user) => (
                 <li>
